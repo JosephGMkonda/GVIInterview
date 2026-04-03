@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import CustomerForm from './costomerForm.jsx';
-
+import EditForm from './editForm.jsx';
 const CustomerList = () => {
   const [customers, setCustomers] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [loading, setLoading] = useState(false);
 
 
@@ -21,6 +23,12 @@ const CustomerList = () => {
       setLoading(false);
     }
   };
+
+    const handleEdit = (customer) => {
+    setSelectedCustomer(customer);
+    setShowEditModal(true);
+  };
+
 
   
   const handleDelete = async (id) => {
@@ -87,9 +95,13 @@ const CustomerList = () => {
                   </span>
                 </td>
                 <td className="py-2 px-4 flex justify-center space-x-2">
-                  <button className="text-blue-500 hover:text-blue-700">
-                    edit
+                   <button
+                    onClick={() => handleEdit(c)}
+                    className="text-blue-500 hover:underline"
+                  >
+                    Edit
                   </button>
+
                   <button
                     className="text-red-500 hover:text-red-700"
                     onClick={() => handleDelete(c.customer_id)}
@@ -112,6 +124,13 @@ const CustomerList = () => {
       <CustomerForm
         isOpen={showModal}
         onClose={() => setShowModal(false)}
+        onSuccess={fetchCustomers}
+      />
+
+        <EditForm
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        customer={selectedCustomer}
         onSuccess={fetchCustomers}
       />
 
